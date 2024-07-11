@@ -1,0 +1,228 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.video-container {
+  position: relative;
+  width: 90vw;
+  max-width: 1000px;
+  display: flex;
+  justify-content: center;
+  margin-inline: auto;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.video-container.theater,
+.video-container.full-screen {
+  max-width: initial;
+  width: 100%;
+}
+.video-container.theater {
+  max-height: 80vh;
+}
+.video-container.full-screen {
+  max-height: 100vh;
+}
+
+.video-container .controls-container::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  aspect-ratio: 6 / 1;
+  z-index: -1;
+  background: linear-gradient(to top, #000000af, transparent);
+}
+
+.video-container:hover .controls-container,
+.video-container.paused .controls-container,
+.video-container:focus-within .controls-container {
+  opacity: 1;
+}
+
+video {
+  width: 100%;
+}
+
+.video-container .controls-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  color: #FFF;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.controls-container .controls {
+  display: flex;
+  gap: .5rem;
+  padding: .25rem;
+  align-items: center;
+}
+
+.controls-container .controls button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.video-container.paused .pause-icon {
+  display: none;
+}
+.video-container:not(.paused) .play-icon {
+  display: none;
+}
+.video-container.theater .theater-on-icon {
+  display: none;
+}
+.video-container:not(.theater) .theater-off-icon {
+  display: none;
+}
+.video-container.full-screen .full-screen-icon {
+  display: none;
+}
+.video-container:not(.full-screen) .full-screen-exit-icon {
+  display: none;
+}
+.video-container.in-picture .full-screen-icon {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.video-container .volume-hight-icon,
+.video-container .volume-low-icon,
+.video-container .volume-muted-icon {
+  display: none;
+}
+
+.video-container .volume-container {
+  display: flex;
+  align-items: center;
+}
+
+.video-container .volume-slider {
+  width: 0;
+  height: 4px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: width 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+.volume-container:hover .volume-slider,
+.volume-container .volume-slider:focus-within {
+  transform: scaleX(1);
+  width: 80px;
+}
+
+.video-container[data-volume-level="hight"] .volume-hight-icon {
+  display: block;
+}
+.video-container[data-volume-level="low"] .volume-low-icon {
+  display: block;
+}
+.video-container[data-volume-level="muted"] .volume-muted-icon {
+  display: block;
+}
+
+.video-container .timestamp-container {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  flex-grow: 1;
+}
+
+.video-container .captions-btn {
+  position: relative;
+}
+.video-container .captions-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  margin-inline: auto;
+  background-color: #f00;
+  transition: width .15s ease-in-out;
+}
+.video-container.captions .captions-btn::after {
+  width: 80%;
+}
+
+.video-container .captions-btn .captions-off-icon {
+  opacity: 0.5;
+}
+
+.timeline-container {
+  height: 7px;
+  margin-inline: .5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-container .timeline {
+  background-color: #64646480;
+  height: 3px;
+  width: 100%;
+  position: relative;
+  transition: height .07s ease-in;
+}
+.video-container.scrubbing .timeline-container .timeline,
+.timeline-container:hover .timeline {
+  height: 100%;
+}
+
+.timeline-container .timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: calc(100% - var(--preview-position) * 100%);
+  background-color: #969696;
+  display: none;
+}
+.video-container.scrubbing .timeline-container .timeline::before,
+.timeline-container:hover .timeline::before {
+  display: block;
+}
+
+.timeline-container .timeline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: calc(100% - var(--progress-position) * 100%);
+  background-color: #f00;
+}
+
+.timeline-container .timeline .thumb-indicator {
+  --scale: 0;
+  position: absolute;
+  height: 200%;
+  top: -50%;
+  left: calc(var(--progress-position) * 100%);
+  aspect-ratio: 1;
+  transform: translateX(-50%) scale(var(--scale));
+  background-color: #f00;
+  border-radius: 50%;
+  transition: transform .15s ease-in-out;
+}
+.video-container.scrubbing .timeline-container .timeline .thumb-indicator,
+.timeline-container:hover .timeline .thumb-indicator {
+  --scale: 1;
+}
